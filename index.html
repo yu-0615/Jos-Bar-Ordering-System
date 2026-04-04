@@ -7,10 +7,10 @@
     <style>
         :root {
             --apple-blue: #007aff;
-            --order-cyan: #0abcd4; /* 你指定的 HEX */
+            --order-cyan: #0abcd4;
             --apple-gray: #f2f2f7;
             --bg-color: #f5f5f7;
-            --card-radius: 30px; /* 全圓角 */
+            --card-radius: 30px;
             --input-radius: 24px;
         }
 
@@ -24,7 +24,6 @@
             color: #1d1d1f;
         }
 
-        /* 主容器 */
         .form-card, #success_page {
             background:#f3f2f7 ;
             backdrop-filter: blur(20px);
@@ -54,7 +53,6 @@
             text-align: center;
         }
 
-        /* 電子郵件輸入框 */
         .form-group {
             margin-bottom: 30px;
         }
@@ -64,7 +62,7 @@
             font-size: 15px;
             font-weight: 600;
             margin-bottom: 10px;
-            padding-left: 4px; /* 向右移動 2px */
+            padding-left: 4px;
         }
 
         input[type="email"] {
@@ -73,7 +71,7 @@
             background-color: #ffffff;
             border: 1px solid transparent;
             border-radius: var(--input-radius);
-            padding: 14px 20px; /* 視覺高度約 48px */
+            padding: 14px 20px;
             font-size: 16px;
             outline: none;
             transition: none !important;
@@ -81,21 +79,19 @@
         }
 
         input[type="email"]:focus {
-            outline: none !important;/* 僅變更邊框色，不使用動畫與光暈 */
+            outline: none !important;
         }
         
 
-        /* 條款容器 */
         .rules-container {
             background-color: #ffffff;
             border-radius: var(--card-radius);
-            padding: 24px;
+            padding: 12px 24px 24px;
             margin: 24px 0;
             font-size: 14px;
             line-height: 1.6;
         }
 
-        /* 同意勾選框 (Apple SVG 風格) */
         .agree-box {
             margin-top: 20px;
             display: flex;
@@ -124,20 +120,23 @@
             
         }
 
-        /* 表格容器（類似條款區） */
         .table-container {
             background-color: #ffffff;
             border-radius: var(--card-radius);
             padding: 20px 18px 10px;
-            margin: 24px 0 30px;
+            margin: 0 0 30px;
             overflow-x: auto;
             box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+        }
+
+        .form-group.table-heading {
+            margin-bottom: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* 均分列寬 */
+            table-layout: fixed;
         }
 
         th {
@@ -163,7 +162,6 @@
             width: 35%;
         }
 
-        /* 表格單選鈕 (Apple Radio 風格) */
         input[type="radio"] {
             -webkit-appearance: none;
             appearance: none;
@@ -192,7 +190,6 @@
             transform: scale(0.95);
         }
 
-        /* 提交按鈕 */
         .submit-btn {
             background-color: var(--apple-blue);
             color: white;
@@ -208,7 +205,22 @@
 
         .submit-btn:hover { opacity: 0.9; }
 
-        /* 成功頁面 */
+        .form-warning {
+            display: none;
+            background-color: #fff4e5;
+            border: 1px solid #f6c17d;
+            color: #8d5a14;
+            border-radius: 30px;
+            padding: 14px 18px;
+            margin: 0 0 18px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .form-warning.visible {
+            display: block;
+        }
+
         #success_page { text-align: center; padding: 60px 32px; }
         .reload-btn {
             background: var(--apple-gray);
@@ -230,14 +242,9 @@
             <form id="myForm" 
                 action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSe62MiMaZ16eleTlC1U263PWoP4HxouNkoR80VfHFbdjd85Qg/formResponse" 
                 method="POST" 
-                target="hidden_confirm" 
-                onsubmit="handleFormSubmit();">
+                target="hidden_confirm"
+                novalidate>
                 
-                <div class="form-group">
-                    <label>電子郵件</label>
-                    <input type="email" name="emailAddress" required placeholder="請輸入可接收取餐號碼的電子郵件">
-                </div>
-
                 <div class="rules-container">
                     <p class="intro-text">
                         <i>歡迎使用本線上點餐系統，為確保您的餐點品質與訂單準確性，請在送出表單前詳閱以下事項：</i>
@@ -269,6 +276,15 @@
                         <input type="checkbox" id="agree-check" name="entry.751254228" value="同意並繼續使用本平台" required>
                         <label for="agree-check">同意並繼續使用本平台</label>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label>電子郵件</label>
+                    <input type="email" name="emailAddress" required placeholder="請輸入可接收取餐號碼的電子郵件">
+                </div>
+
+                <div class="form-group table-heading">
+                    <label>選擇餐點</label>
                 </div>
 
                 <div class="table-container">
@@ -324,6 +340,7 @@
                     </table>
                 </div>
 
+                <div id="formWarning" class="form-warning">請至少選擇一項餐點。</div>
                 <button type="submit" class="submit-btn">提交訂單</button>
             </form>
         </div>
@@ -345,9 +362,64 @@
     <script>
         var submitted = false;
 
-        function handleFormSubmit() {
-            submitted = true;
+        function showFormWarning(message, targetElement) {
+            var warning = document.getElementById('formWarning');
+            warning.textContent = message;
+            warning.classList.add('visible');
+            if (targetElement) {
+                var insertAfter = targetElement;
+                var rulesContainer = targetElement.closest('.rules-container');
+                if (rulesContainer && targetElement.closest('.agree-box')) {
+                    insertAfter = rulesContainer;
+                }
+                insertAfter.parentNode.insertBefore(warning, insertAfter.nextSibling);
+            }
         }
+
+        function hideFormWarning() {
+            var warning = document.getElementById('formWarning');
+            warning.classList.remove('visible');
+        }
+
+        function validateForm() {
+            var emailInput = document.querySelector('input[type="email"]');
+            var emailValue = emailInput.value.trim();
+            if (!emailValue) {
+                showFormWarning('請輸入可接收取餐號碼的電子郵件。', document.querySelector('.form-group'));
+                submitted = false;
+                return false;
+            }
+
+            if (!emailInput.checkValidity()) {
+                showFormWarning('請輸入有效的電子郵件地址。', document.querySelector('.form-group'));
+                submitted = false;
+                return false;
+            }
+
+            var agreeCheckbox = document.getElementById('agree-check');
+            if (!agreeCheckbox.checked) {
+                showFormWarning('請先同意平台使用條款。', document.querySelector('.agree-box'));
+                submitted = false;
+                return false;
+            }
+
+            var anySelected = Array.from(document.querySelectorAll('.table-container input[type="radio"]')).some(radio => radio.checked);
+            if (!anySelected) {
+                showFormWarning('請至少選擇一項餐點。', document.querySelector('.table-container'));
+                submitted = false;
+                return false;
+            }
+
+            hideFormWarning();
+            submitted = true;
+            return true;
+        }
+
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
 
         function showSuccess() {
             document.getElementById('form_container').style.display = 'none';
@@ -355,18 +427,16 @@
             window.scrollTo(0, 0);
         }
 
-        // 新增：處理單選鈕取消勾選邏輯
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('click', function() {
                 if (this.previousValue) {
-            this.checked = false;
+                    this.checked = false;
                 }
-        
-                // 更新同一個 name 群組中所有按鈕的狀態
+
                 document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
                     r.previousValue = false;
                 });
-        
+
                 if (this.checked) {
                     this.previousValue = true;
                 }
