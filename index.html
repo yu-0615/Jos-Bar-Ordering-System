@@ -382,6 +382,13 @@
         }
 
         function validateForm() {
+            var agreeCheckbox = document.getElementById('agree-check');
+            if (!agreeCheckbox.checked) {
+                showFormWarning('請先同意平台使用條款。', document.querySelector('.agree-box'));
+                submitted = false;
+                return false;
+            }
+
             var emailInput = document.querySelector('input[type="email"]');
             var emailValue = emailInput.value.trim();
             if (!emailValue) {
@@ -392,13 +399,6 @@
 
             if (!emailInput.checkValidity()) {
                 showFormWarning('請輸入有效的電子郵件地址。', document.querySelector('.form-group'));
-                submitted = false;
-                return false;
-            }
-
-            var agreeCheckbox = document.getElementById('agree-check');
-            if (!agreeCheckbox.checked) {
-                showFormWarning('請先同意平台使用條款。', document.querySelector('.agree-box'));
                 submitted = false;
                 return false;
             }
