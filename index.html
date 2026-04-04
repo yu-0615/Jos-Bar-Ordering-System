@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1682 Jo's Bar 線上點餐系統</title>
+    <style>
+        :root {
+            --apple-blue: #007aff;
+            --order-cyan: #0abcd4; /* 你指定的 HEX */
+            --apple-gray: #f2f2f7;
+            --bg-color: #f5f5f7;
+            --card-radius: 30px; /* 全圓角 */
+            --input-radius: 24px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 40px 16px;
+            display: flex;
+            justify-content: center;
+            color: #1d1d1f;
+        }
+
+        /* 主容器 */
+        .form-card, #success_page {
+            background:#f3f2f7 ;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            width: 100%;
+            max-width: 640px;
+            border-radius: 45px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            overflow: hidden;
+            animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            padding: 32px;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 28px 0;
+            text-align: center;
+        }
+
+        /* 電子郵件輸入框 */
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding-left: 4px; /* 向右移動 2px */
+        }
+
+        input[type="email"] {
+            width: 100%;
+            box-sizing: border-box; 
+            background-color: #ffffff;
+            border: 1px solid transparent;
+            border-radius: var(--input-radius);
+            padding: 14px 20px; /* 視覺高度約 48px */
+            font-size: 16px;
+            outline: none;
+            transition: none !important;
+            will-change: auto;
+        }
+
+        input[type="email"]:focus {
+            outline: none !important;/* 僅變更邊框色，不使用動畫與光暈 */
+        }
+        
+
+        /* 條款容器 */
+        .rules-container {
+            background-color: #ffffff;
+            border-radius: var(--card-radius);
+            padding: 24px;
+            margin: 24px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* 同意勾選框 (Apple SVG 風格) */
+        .agree-box {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .agree-box input {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-right: 12px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1.5px solid #d1d1d6;
+            border-radius: 50%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 0% 0%;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .agree-box input:checked {
+            background-color: var(--order-cyan);
+            border-color: var(--order-cyan);
+            
+        }
+
+        /* 表格容器（類似條款區） */
+        .table-container {
+            background-color: #ffffff;
+            border-radius: var(--card-radius);
+            padding: 20px 18px 10px;
+            margin: 24px 0 30px;
+            overflow-x: auto;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* 均分列寬 */
+        }
+
+        th {
+            color: #86868b;
+            font-weight: 500;
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        td {
+            padding: 16px 5px;
+            border-bottom: 1px solid #f2f2f7;
+            text-align: center;
+        }
+
+        .table-container table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .row-label {
+            text-align: left !important;
+            font-weight: 600;
+            width: 35%;
+        }
+
+        /* 表格單選鈕 (Apple Radio 風格) */
+        input[type="radio"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1.5px solid #d1d1d6;
+            border-radius: 50%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 0% 0%;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="radio"]:checked {
+            background-color: var(--order-cyan);
+            border-color: var(--order-cyan);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3%3Ccircle cx='12' cy='12' r='5' fill='%23fff'/%3%3C/svg%3E");
+            background-size: 100% 100%;
+        }
+
+        input[type="radio"]:active,
+        input[type="checkbox"]:active,
+        .submit-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 提交按鈕 */
+        .submit-btn {
+            background-color: var(--apple-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 26px;
+            font-size: 16px;
+            font-weight: 550;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover { opacity: 0.9; }
+
+        /* 成功頁面 */
+        #success_page { text-align: center; padding: 60px 32px; }
+        .reload-btn {
+            background: var(--apple-gray);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: var(--apple-blue);
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-card" id="form_container">
+        <div class="container">
+            <h2>1682 Jo's Bar 線上點餐系統</h2>
+            
+            <form id="myForm" 
+                action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSe62MiMaZ16eleTlC1U263PWoP4HxouNkoR80VfHFbdjd85Qg/formResponse" 
+                method="POST" 
+                target="hidden_confirm" 
+                onsubmit="handleFormSubmit();">
+                
+                <div class="form-group">
+                    <label>電子郵件</label>
+                    <input type="email" name="emailAddress" required placeholder="請輸入可接收取餐號碼的電子郵件">
+                </div>
+
+                <div class="rules-container">
+                    <p class="intro-text">
+                        <i>歡迎使用本線上點餐系統，為確保您的餐點品質與訂單準確性，請在送出表單前詳閱以下事項：</i>
+                    </p>
+
+                    <div class="rules-section">
+                        <h3>訂購與修改須知</h3>
+                        <ol>
+                            <li>送出表單後，系統將自動發送<strong>包含取餐序號之郵件</strong>至您填寫的信箱。請務必確認收到郵件，才視為訂購成功。（若沒有收到，請檢查垃圾郵件信箱）</li>
+                            <li>由於餐點皆為現做，如需取消或更改訂單內容，請<strong>立即於下訂後以電子郵件或現場告知</strong>，逾時恕不受理。</li>
+                            <li>品項皆為限量供應，若遇食材完售，我們僅於<strong>取餐時告知</strong>更換品項或取消該筆訂單。</li>
+                        </ol>
+
+                        <h3>取餐提醒</h3>
+                        <ol>
+                            <li>下訂後1小時內未取餐，為保證食品安全與品質，我們將<strong>不承擔相關責任</strong>，並且<strong>取消此筆交易</strong>。</li>
+                            <li>取餐時請出示<strong>訂單編號</strong>，並請當場確認餐點品項與數量。</li>
+                        </ol>
+
+                        <h3>權利聲明與個資保護</h3>
+                        <ol>
+                            <li>您所填寫的電子郵件等個人資料，僅供本點餐系統進行通知使用，我們承諾<strong>不會把資料洩漏給第三方</strong>。</li>
+                            <li>若無故惡意棄單或多次未取餐，本系統保有拒絕您未來再次訂購之權利，並視情況<strong>追究相關食材耗損損失</strong>。</li>
+                            <li>本攤位保有隨時修正活動內容及最終解釋之權利，如有異動請以現場公告為準。</li>
+                        </ol>
+                    </div>
+
+                    <div class="agree-box">
+                        <input type="checkbox" id="agree-check" name="entry.751254228" value="同意並繼續使用本平台" required>
+                        <label for="agree-check">同意並繼續使用本平台</label>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 35%;"></th>
+                                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="row-label">套餐一</td>
+                                <td><input type="radio" name="entry.1306630109" value="1"></td>
+                                <td><input type="radio" name="entry.1306630109" value="2"></td>
+                                <td><input type="radio" name="entry.1306630109" value="3"></td>
+                                <td><input type="radio" name="entry.1306630109" value="4"></td>
+                                <td><input type="radio" name="entry.1306630109" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-label">套餐二</td>
+                                <td><input type="radio" name="entry.668118364" value="1"></td>
+                                <td><input type="radio" name="entry.668118364" value="2"></td>
+                                <td><input type="radio" name="entry.668118364" value="3"></td>
+                                <td><input type="radio" name="entry.668118364" value="4"></td>
+                                <td><input type="radio" name="entry.668118364" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-label">炒泡麵</td>
+                                <td><input type="radio" name="entry.505717220" value="1"></td>
+                                <td><input type="radio" name="entry.505717220" value="2"></td>
+                                <td><input type="radio" name="entry.505717220" value="3"></td>
+                                <td><input type="radio" name="entry.505717220" value="4"></td>
+                                <td><input type="radio" name="entry.505717220" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-label">炒泡麵 (不加蛋)</td>
+                                <td><input type="radio" name="entry.1624454937" value="1"></td>
+                                <td><input type="radio" name="entry.1624454937" value="2"></td>
+                                <td><input type="radio" name="entry.1624454937" value="3"></td>
+                                <td><input type="radio" name="entry.1624454937" value="4"></td>
+                                <td><input type="radio" name="entry.1624454937" value="5"></td>
+                            </tr>
+                            <tr>
+                                <td class="row-label">冬瓜茶</td>
+                                <td><input type="radio" name="entry.579891903" value="1"></td>
+                                <td><input type="radio" name="entry.579891903" value="2"></td>
+                                <td><input type="radio" name="entry.579891903" value="3"></td>
+                                <td><input type="radio" name="entry.579891903" value="4"></td>
+                                <td><input type="radio" name="entry.579891903" value="5"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button type="submit" class="submit-btn">提交訂單</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="success_page" style="display:none;">
+        <div class="container">
+            <h1 style="font-size: 50px;">🎉</h1>
+            <h1>訂購成功！</h1>
+            <p>我們已收到您的訂單，請查看信箱來取得您的取餐號碼。</p>
+            <p style="color: #86868b;">環保餐具折扣請於付款時提出。</p>
+            <br>
+            <button class="reload-btn" onclick="window.location.reload();">再次訂購</button>
+        </div>
+    </div>
+
+    <iframe name="hidden_confirm" id="hidden_confirm" style="display:none;" onload="if(submitted) { showSuccess(); }"></iframe>
+
+    <script>
+        var submitted = false;
+
+        function handleFormSubmit() {
+            submitted = true;
+        }
+
+        function showSuccess() {
+            document.getElementById('form_container').style.display = 'none';
+            document.getElementById('success_page').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        // 新增：處理單選鈕取消勾選邏輯
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('click', function() {
+                if (this.previousValue) {
+            this.checked = false;
+                }
+        
+                // 更新同一個 name 群組中所有按鈕的狀態
+                document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                    r.previousValue = false;
+                });
+        
+                if (this.checked) {
+                    this.previousValue = true;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
