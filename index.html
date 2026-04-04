@@ -186,11 +186,11 @@
 
         input[type="radio"]:active,
         input[type="checkbox"]:active,
-        .submit-btn:active {
+        .submit-btn:active, .secondary-btn:active {
             transform: scale(0.95);
         }
 
-        .submit-btn {
+        .submit-btn, .secondary-btn {
             background-color: var(--apple-blue);
             color: white;
             border: none;
@@ -203,7 +203,15 @@
             transition: all 0.2s;
         }
 
-        .submit-btn:hover { opacity: 0.9; }
+        .secondary-btn {
+            background-color: #e5e5ea;
+            color: var(--apple-blue);
+            border: 2px solid var(--apple-blue);
+        }
+
+        .submit-btn:hover, .secondary-btn:hover {
+            opacity: 0.9;
+        }
 
         .form-warning {
             display: none;
@@ -221,23 +229,126 @@
             display: block;
         }
 
-        #success_page { text-align: center; padding: 60px 32px; }
-        .reload-btn {
-            background: var(--apple-gray);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            color: var(--apple-blue);
-            font-weight: 600;
-            cursor: pointer;
+        #confirm_page .form-group.table-heading {
+            margin-bottom: 0;
         }
-    </style>
-</head>
-<body>
+
+        #email_summary {
+            margin: 0 0 20px 0;
+            text-align: left;
+        }
+
+        #meal_summary {
+            margin: 10px 0 20px 0;
+            text-align: left;
+            min-height: 60px;
+        }
+
+        .main-title {
+            font-size: 40px;
+        }
+
+        .table-header {
+            width: 35%;
+        }
+
+        #success_page {
+            text-align: center;
+            padding: 60px 32px;
+        }
+
+        .success-emoji {
+            font-size: 50px;
+        }
+
+        .success-note {
+            color: #86868b;
+        }
+
+        .confirm-title {
+            font-size: 40px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .email-summary-text {
+            display: block;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 10px;
+            margin-top: 0;
+            color: #1d1d1f;
+
+        }
+
+        /* --- 訂單摘要對齊樣式 --- */
+        .meal-summary-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .meal-summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 4px;
+            border-bottom: none;
+            font-size: 15px;
+            position: relative;
+        }
+
+        .meal-summary-item:not(:last-child) {
+            border-bottom: 1px solid #d1d1d6
+        }
+
+        /* 左側：品項名稱 */
+        .item-name {
+            flex: 1; 
+            font-weight: 600;
+            color: #1d1d1f;
+            text-align: left;
+        }
+
+        /* 右側：金額資訊容器 */
+        .item-details {
+            display: flex;
+            gap: 12px; /* 欄位間距 */
+            font-family: -apple-system, BlinkMacSystemFont, "SF Mono", monospace; /* 等寬數字更整齊 */
+            color: #86868b;
+        }
+
+        /* 具體欄位寬度設定 */
+        .detail-unit { width: 45px; text-align: right; } /* 單價 */
+        .detail-qty  { width: 35px; text-align: right; } /* 數量 */
+        .detail-sub  { width: 65px; text-align: right; font-weight: 600; color: #1d1d1f; } /* 小計 */
+
+        .total-amount-section {
+            margin-top: 15px;
+            padding: 15px 4px;
+            border-top: 2px solid #1d1d1f;
+            text-align: right;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+
+            </style>
+        </head>
+        <body>
 
     <div class="form-card" id="form_container">
         <div class="container">
-            <h2>1682 Jo's Bar 線上點餐系統</h2>
+            <h2 class="main-title">1682 Jo's Bar 線上點餐系統</h2>
             
             <form id="myForm" 
                 action="https://docs.google.com/forms/u/1/d/e/1FAIpQLSe62MiMaZ16eleTlC1U263PWoP4HxouNkoR80VfHFbdjd85Qg/formResponse" 
@@ -291,7 +402,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 35%;"></th>
+                                <th class="table-header"></th>
                                 <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
                             </tr>
                         </thead>
@@ -341,23 +452,44 @@
                 </div>
 
                 <div id="formWarning" class="form-warning">請至少選擇一項餐點。</div>
-                <button type="submit" class="submit-btn">提交訂單</button>
+                <button type="submit" class="submit-btn">下一步</button>
             </form>
         </div>
     </div>
 
-    <div id="success_page" style="display:none;">
+    <div id="success_page" class="form-card hidden">
         <div class="container">
-            <h1 style="font-size: 50px;">🎉</h1>
+            <h1 class="success-emoji">🎉</h1>
             <h1>訂購成功！</h1>
-            <p>我們已收到您的訂單，請查看信箱來取得您的取餐號碼。</p>
-            <p style="color: #86868b;">環保餐具折扣請於付款時提出。</p>
+            <p>我們已收到您的訂單，請記得查看信箱來取得您的取餐號碼。</p>
+            <p class="success-note">環保餐具折扣請於付款時提出。</p>
             <br>
-            <button class="reload-btn" onclick="window.location.reload();">再次訂購</button>
+        <button class="secondary-btn" onclick="window.location.reload();">再次訂購</button>        </div>
+    </div>
+
+    <div id="confirm_page" class="form-card hidden">
+        <div class="container">
+            <h2 class="confirm-title">確認訂單</h2>
+            <div class="form-group table-heading">
+                <label>確認電子郵件</label>
+            </div>
+            <div id="email_summary" class="table-container">
+                <!-- 電子郵件摘要將動態插入這裡 -->
+            </div>
+            <div class="form-group table-heading">
+                <label>確認餐點</label>
+            </div>
+            <div id="meal_summary" class="table-container">
+                <!-- 餐點摘要將動態插入這裡 -->
+            </div>
+            <div class="button-container">
+                <button type="button" class="secondary-btn" onclick="backToForm();">返回修改</button>
+                <button type="button" class="submit-btn" onclick="submitOrder();">確認提交</button>
+            </div>
         </div>
     </div>
 
-    <iframe name="hidden_confirm" id="hidden_confirm" style="display:none;" onload="if(submitted) { showSuccess(); }"></iframe>
+    <iframe name="hidden_confirm" id="hidden_confirm" class="hidden" onload="if(submitted) { showSuccess(); }"></iframe>
 
     <script>
         var submitted = false;
@@ -373,6 +505,8 @@
                     insertAfter = rulesContainer;
                 }
                 insertAfter.parentNode.insertBefore(warning, insertAfter.nextSibling);
+                // 自動捲動到未填寫的欄位
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
@@ -411,8 +545,8 @@
             }
 
             hideFormWarning();
-            submitted = true;
-            return true;
+            showConfirmPage();
+            return false; // 阻止表單提交，改為顯示確認頁面
         }
 
         document.getElementById('myForm').addEventListener('submit', function(event) {
@@ -423,8 +557,74 @@
 
         function showSuccess() {
             document.getElementById('form_container').style.display = 'none';
+            document.getElementById('confirm_page').style.display = 'none';
             document.getElementById('success_page').style.display = 'block';
             window.scrollTo(0, 0);
+        }
+
+
+        function showConfirmPage() {
+            var email = document.querySelector('input[type="email"]').value;
+            var emailSummary = '<div class="email-summary-text">電子郵件：' + email + '</div>';
+
+            // 定義價格表
+            var priceList = {
+                'entry.1306630109': 90,
+                'entry.668118364': 80,
+                'entry.505717220': 75,
+                'entry.1624454937': 65,
+                'entry.579891903': 20
+            };
+
+            var itemNames = {
+                'entry.1306630109': '套餐一',
+                'entry.668118364': '套餐二',
+                'entry.505717220': '炒泡麵',
+                'entry.1624454937': '炒泡麵 (不加蛋)',
+                'entry.579891903': '冬瓜茶'
+            };
+
+            var mealSummary = '<ul class="meal-summary-list">';
+            var totalAmount = 0;
+
+            document.querySelectorAll('.table-container input[type="radio"]:checked').forEach(function(radio) {
+                var name = radio.name;
+                var quantity = parseInt(radio.value);
+                var unitPrice = priceList[name];
+                var subtotal = unitPrice * quantity;
+                totalAmount += subtotal;
+
+                mealSummary += `
+                    <li class="meal-summary-item">
+                        <span>${itemNames[name]} × ${quantity}</span>
+                        <span class="item-price-detail">$${unitPrice} × ${quantity} = $${subtotal}</span>
+                    </li>`;
+            });
+
+            mealSummary += '</ul>';
+    
+            // 加入總計區塊
+            mealSummary += `
+                <div class="total-amount-section">
+                    總計：$${totalAmount}
+                 </div>`;
+
+            document.getElementById('email_summary').innerHTML = emailSummary;
+            document.getElementById('meal_summary').innerHTML = mealSummary;
+            document.getElementById('form_container').style.display = 'none';
+            document.getElementById('confirm_page').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function backToForm() {
+            document.getElementById('confirm_page').style.display = 'none';
+            document.getElementById('form_container').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function submitOrder() {
+            submitted = true;
+            document.getElementById('myForm').submit();
         }
 
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
