@@ -12,6 +12,7 @@
             --bg-color: #f5f5f7;
             --card-radius: 30px;
             --input-radius: 24px;
+            --image-radius: 14px;
         }
 
         body {
@@ -150,6 +151,7 @@
             padding: 16px 5px;
             border-bottom: 1px solid #f2f2f7;
             text-align: center;
+            vertical-align: middle;
         }
 
         .table-container table tbody tr:last-child td {
@@ -159,7 +161,36 @@
         .row-label {
             text-align: left !important;
             font-weight: 600;
-            width: 35%;
+            width: 50%; /* 增加寬度以容納圖片與文字 */
+        }
+
+        /* --- 圖片區塊樣式 --- */
+        .item-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--image-radius);
+            object-fit: cover;
+            background-color: var(--apple-gray);
+            border: 1px solid rgba(0,0,0,0.05);
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #86868b;
+            text-align: center;
+        }
+
+        .item-name-text {
+            font-size: 15px;
+            line-height: 1.3;
         }
 
         input[type="radio"] {
@@ -249,7 +280,7 @@
         }
 
         .table-header {
-            width: 35%;
+            width: 50%;
         }
 
         #success_page {
@@ -322,15 +353,10 @@
         /* 右側：金額資訊容器 */
         .item-details {
             display: flex;
-            gap: 12px; /* 欄位間距 */
-            font-family: -apple-system, BlinkMacSystemFont, "SF Mono", monospace; /* 等寬數字更整齊 */
+            gap: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Mono", monospace;
             color: #86868b;
         }
-
-        /* 具體欄位寬度設定 */
-        .detail-unit { width: 45px; text-align: right; } /* 單價 */
-        .detail-qty  { width: 35px; text-align: right; } /* 數量 */
-        .detail-sub  { width: 65px; text-align: right; font-weight: 600; color: #1d1d1f; } /* 小計 */
 
         .total-amount-section {
             margin-top: 15px;
@@ -418,7 +444,12 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="row-label">套餐一</td>
+                                <td class="row-label">
+                                    <div class="item-cell">
+                                        <div class="item-image">暫無圖片</div>
+                                        <span class="item-name-text">東尼歐全餐A</span>
+                                    </div>
+                                </td>
                                 <td><input type="radio" name="entry.1306630109" value="1"></td>
                                 <td><input type="radio" name="entry.1306630109" value="2"></td>
                                 <td><input type="radio" name="entry.1306630109" value="3"></td>
@@ -426,7 +457,12 @@
                                 <td><input type="radio" name="entry.1306630109" value="5"></td>
                             </tr>
                             <tr>
-                                <td class="row-label">套餐二</td>
+                                <td class="row-label">
+                                    <div class="item-cell">
+                                        <div class="item-image">暫無圖片</div>
+                                        <span class="item-name-text">東尼歐全餐B</span>
+                                    </div>
+                                </td>
                                 <td><input type="radio" name="entry.668118364" value="1"></td>
                                 <td><input type="radio" name="entry.668118364" value="2"></td>
                                 <td><input type="radio" name="entry.668118364" value="3"></td>
@@ -434,7 +470,12 @@
                                 <td><input type="radio" name="entry.668118364" value="5"></td>
                             </tr>
                             <tr>
-                                <td class="row-label">炒泡麵</td>
+                                <td class="row-label">
+                                    <div class="item-cell">
+                                        <img src="https://lh3.googleusercontent.com/u/0/d/15e5NKz7B3FCVWNJBtVo6sCi1CW6pHWHM" alt="餐點圖片" class="item-image">
+                                        <span class="item-name-text">黃金之風</span>
+                                    </div>
+                                </td>
                                 <td><input type="radio" name="entry.505717220" value="1"></td>
                                 <td><input type="radio" name="entry.505717220" value="2"></td>
                                 <td><input type="radio" name="entry.505717220" value="3"></td>
@@ -442,7 +483,12 @@
                                 <td><input type="radio" name="entry.505717220" value="5"></td>
                             </tr>
                             <tr>
-                                <td class="row-label">炒泡麵 (不加蛋)</td>
+                                <td class="row-label">
+                                    <div class="item-cell">
+                                        <img src="https://lh3.googleusercontent.com/u/0/d/15e5NKz7B3FCVWNJBtVo6sCi1CW6pHWHM" alt="餐點圖片" class="item-image">
+                                        <span class="item-name-text">白金之星</span>
+                                    </div>
+                                </td>
                                 <td><input type="radio" name="entry.1624454937" value="1"></td>
                                 <td><input type="radio" name="entry.1624454937" value="2"></td>
                                 <td><input type="radio" name="entry.1624454937" value="3"></td>
@@ -450,7 +496,12 @@
                                 <td><input type="radio" name="entry.1624454937" value="5"></td>
                             </tr>
                             <tr>
-                                <td class="row-label">冬瓜茶</td>
+                                <td class="row-label">
+                                    <div class="item-cell">
+                                        <img src="https://lh3.googleusercontent.com/u/0/d/1SfZfGwXSzWbHu6RZ-XtBsrhId6_Dt3cU" alt="餐點圖片" class="item-image">
+                                        <span class="item-name-text">阿帕茶</span>
+                                    </div>
+                                </td>
                                 <td><input type="radio" name="entry.579891903" value="1"></td>
                                 <td><input type="radio" name="entry.579891903" value="2"></td>
                                 <td><input type="radio" name="entry.579891903" value="3"></td>
@@ -483,15 +534,11 @@
             <div class="form-group table-heading">
                 <label>確認電子郵件</label>
             </div>
-            <div id="email_summary" class="table-container">
-                <!-- 電子郵件摘要將動態插入這裡 -->
-            </div>
+            <div id="email_summary" class="table-container"></div>
             <div class="form-group table-heading">
                 <label>確認餐點</label>
             </div>
-            <div id="meal_summary" class="table-container">
-                <!-- 餐點摘要將動態插入這裡 -->
-            </div>
+            <div id="meal_summary" class="table-container"></div>
             <div class="button-container">
                 <button type="button" class="secondary-btn" onclick="backToForm();">返回修改</button>
                 <button type="button" class="submit-btn" onclick="submitOrder();">確認提交</button>
@@ -515,7 +562,6 @@
                     insertAfter = rulesContainer;
                 }
                 insertAfter.parentNode.insertBefore(warning, insertAfter.nextSibling);
-                // 自動捲動到未填寫的欄位
                 targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
@@ -556,7 +602,7 @@
 
             hideFormWarning();
             showConfirmPage();
-            return false; // 阻止表單提交，改為顯示確認頁面
+            return false;
         }
 
         document.getElementById('myForm').addEventListener('submit', function(event) {
@@ -572,12 +618,10 @@
             window.scrollTo(0, 0);
         }
 
-
         function showConfirmPage() {
             var email = document.querySelector('input[type="email"]').value;
             var emailSummary = '<div class="email-summary-text">電子郵件：' + email + '</div>';
 
-            // 定義價格表
             var priceList = {
                 'entry.1306630109': 90,
                 'entry.668118364': 80,
@@ -587,11 +631,11 @@
             };
 
             var itemNames = {
-                'entry.1306630109': '套餐一',
-                'entry.668118364': '套餐二',
-                'entry.505717220': '炒泡麵',
-                'entry.1624454937': '炒泡麵 (不加蛋)',
-                'entry.579891903': '冬瓜茶'
+                'entry.1306630109': '東尼歐全餐A',
+                'entry.668118364': '東尼歐全餐B',
+                'entry.505717220': '黃金之風',
+                'entry.1624454937': '白金之星',
+                'entry.579891903': '阿帕茶'
             };
 
             var mealSummary = '<ul class="meal-summary-list">';
@@ -612,12 +656,7 @@
             });
 
             mealSummary += '</ul>';
-    
-            // 加入總計區塊
-            mealSummary += `
-                <div class="total-amount-section">
-                    總計：$${totalAmount}
-                 </div>`;
+            mealSummary += `<div class="total-amount-section">總計：$${totalAmount}</div>`;
 
             document.getElementById('email_summary').innerHTML = emailSummary;
             document.getElementById('meal_summary').innerHTML = mealSummary;
@@ -641,13 +680,11 @@
             radio.addEventListener('click', function() {
                 if (this.previousValue) {
                     this.checked = false;
-                }
-
-                document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
-                    r.previousValue = false;
-                });
-
-                if (this.checked) {
+                    this.previousValue = false;
+                } else {
+                    document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                        r.previousValue = false;
+                    });
                     this.previousValue = true;
                 }
             });
